@@ -12,7 +12,7 @@ import AuthGuards from './Guards/AuthGuards'
 import PostsGuards from './Guards/PostsGuards'
 import AuthContextProvider from './components/Context/AuthContext';
 import { QueryClient,QueryClientProvider } from '@tanstack/react-query'
-import PostDetails from './pages/postDetails/postDetails'
+import PostDetails from './pages/PostDetails/PostDetails'
 import {Toaster} from "react-hot-toast"
 import Settings from './components/Settings/Settings'
 
