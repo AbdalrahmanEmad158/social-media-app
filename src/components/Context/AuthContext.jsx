@@ -10,6 +10,7 @@ export default function AuthContextProvider({children}) {
     const[UserData,setUserData]=useState()
     const[currentPassword,setcurrentPassword]=useState()
     const[newPhoto,setNewPhoto] = useState()
+    const[NotificationNumber,setNotificationNumber] = useState()
     async function getLoggedUserData()
     {
       try {
@@ -31,10 +32,14 @@ export default function AuthContextProvider({children}) {
     }
 
     useEffect(()=>
-    {getLoggedUserData()},[token])
+    {getLoggedUserData()
+      console.log("token from context",token)
+    },[token])
   return (
 
-<AuthContext.Provider value={{token , setToken,UserData,setcurrentPassword,currentPassword,setNewPhoto,newPhoto}}>
+<AuthContext.Provider value={{token , setToken,UserData,
+setcurrentPassword,currentPassword,setNewPhoto,newPhoto
+   ,NotificationNumber,setNotificationNumber}}>
 {children}
 </AuthContext.Provider>
    

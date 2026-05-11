@@ -1,9 +1,9 @@
-import { Alert, Button, Card, Spinner } from 'flowbite-react'
+import { Alert, Avatar, Button, Card, Spinner ,Textarea ,NavbarLink} from 'flowbite-react'
 import React, { useState } from 'react'
 import { FcLike } from "react-icons/fc";
 import { FaCommentAlt } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, Links } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../Context/AuthContext';
 import axios from 'axios';
@@ -13,13 +13,20 @@ import {formatDistanceToNow} from "date-fns" ;
 
 import { RiDislikeLine } from "react-icons/ri";
 import { BsShareFill } from "react-icons/bs";
-export default function PostCard({post,setIsOpen,setActivePostId,setPostToBeUbdated}) {
 
-    /*  const [shreModalisOpen, setShreModalIsOpen] = useState(false);
-   const [shreModalactivePostId, setShreModalActivePostId] = useState(false);
-     
-      const handleClose = () => setShreModalIsOpen(false);
-      */
+import { useForm } from 'react-hook-form'
+
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "flowbite-react";
+export default function PostCard({post,setIsOpen,setActivePostId,setPostToBeUbdated,setPostToBeShare}) {
+
+     const {handleSubmit,register,setValue,getValues,reset} = useForm(
+          {
+              defaultValues : {
+                  body : ""
+                  
+              }
+          }
+      )
      
   
   const {UserData} = useContext(AuthContext)
@@ -29,8 +36,8 @@ export default function PostCard({post,setIsOpen,setActivePostId,setPostToBeUbda
     const {name,photo:userImg,_id:userId} = post?.user || {}
 
     if (isShare) {
-       var{body:sahredPostbody,id:sahredPostId,user:sahredPostUser,image:SahredPostimage}=sharedPost
-       var{name:sahredPostUser_Name,photo:sahredPostuserImg,_id:sahredPostuserId,username:sahredPostUser_username}=sahredPostUser
+       var{body:sahredPostbody,id:sahredPostId,user:sahredPostUser,image:SahredPostimage}=sharedPost || {}
+       var{name:sahredPostUser_Name,photo:sahredPostuserImg,_id:sahredPostuserId,username:sahredPostUser_username}=sahredPostUser || {}
     }
  
     
@@ -39,6 +46,12 @@ export default function PostCard({post,setIsOpen,setActivePostId,setPostToBeUbda
     const isUserLiked = post.likes.some(id => id === UserData?._id);
     const [isLikesModalOpen, setIsLikesModalOpen] = useState(false);
 const [likesList, setLikesList] = useState([]);
+
+
+const [openShareModal, setOpenShareModal] = useState(false);
+
+
+
 
     const result = formatDistanceToNow(
       new Date(postDate),
@@ -54,6 +67,8 @@ const [likesList, setLikesList] = useState([]);
  
           QueryClient.invalidateQueries(["allPosts"]) 
           QueryClient.invalidateQueries(["userPosts"]) 
+          QueryClient.invalidateQueries(["FeedFollowingPosts"]) 
+          
           toast.success('Post Deleted Successfully')
          },
          onError : ()=>{
@@ -88,6 +103,7 @@ const [likesList, setLikesList] = useState([]);
         Authorization: `Bearer ${localStorage.getItem("token")}`
         };
   try {
+    
       const resp = await axios.put(`https://route-posts.routemisr.com/posts/${postId}/like`, {}, { headers }
       
     )
@@ -101,6 +117,7 @@ const [likesList, setLikesList] = useState([]);
      return resp
     
   } catch (error) {
+    console.log(error)
     return error
   }
    }
@@ -125,22 +142,50 @@ const [likesList, setLikesList] = useState([]);
   }
 }
 
+ function HandleSharePostIcon() {
+  setOpenShareModal(true);
+}
 
 
- async function sharePost() {
-  try {
+       const {mutate:mutateHandleSharePost,isPending:isPendingShare} =  useMutation(
+       {
+             mutationFn : HandleSharePost,
+             onSuccess : ()=>{
+     
+              QueryClient.invalidateQueries(["allPosts","userPosts","FeedFollowingPosts"]) 
+            //  QueryClient.invalidateQueries(["userPosts"]) 
+              toast.success('Post sahared Successfully')
+             },
+             onError : ()=>{
+    
+        
+             }
+       }
+
+    )
+
+
+
+async function HandleSharePost(value) {
+  setOpenShareModal(false);
+   console.log(value)
+  
+ try {
       const token = localStorage.getItem('token'); 
     
     const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`
         };
-    const { data } = await axios.post(`https://route-posts.routemisr.com/posts/postId/share`, { headers });
+    const { data } = await axios.post(`https://route-posts.routemisr.com/posts/${postId}/share`,value.body, { headers });
    console.log(data);
+  
 
   
   } catch (error) {
     console.error("Error fetching likes", error);
   }
+    
+
 }
 
 
@@ -160,13 +205,25 @@ const [likesList, setLikesList] = useState([]);
         <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img 
+
+  <Link
+              
+              to={`/GetUserProfile/${userId}`}
+           >
+               <img 
                 className='w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600' 
                 src={userImg} 
                 alt={name} 
               />
+            </Link>
+
+
               <div className="flex flex-col">
-                <p className='text-gray-900 dark:text-white font-semibold text-base'>{name}</p>
+              <Link   to={`/GetUserProfile/${userId}`}
+              > <p className='text-gray-900 dark:text-white font-semibold text-base'>{name}</p>
+               
+               </Link>
+               
                 <p className='text-gray-500 dark:text-gray-400 text-xs font-normal'>{result}</p>
               </div>
             </div>
@@ -183,16 +240,21 @@ const [likesList, setLikesList] = useState([]);
 
       <div className="flex gap-3">
         {/* Avatar */}
-        <img
+        <Link to= {`/GetUserProfile/${sahredPostuserId}`}>
+          <img
           src={sahredPostuserImg}
           alt="sahredPostuserImg"
           className="w-10 h-10 rounded-full object-cover"
         />
+        </Link>
+      
 
         <div>
+           <Link to= {`/GetUserProfile/${sahredPostuserId}`}>  
           <h3 className="font-semibold text-gray-800 dark:text-white text-sm">
            {sahredPostUser_Name}
           </h3>
+          </Link>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             {sahredPostUser_username}
           </p>
@@ -264,14 +326,19 @@ const [likesList, setLikesList] = useState([]);
           likesList.map((user) => (
             <div key={user._id} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <div className="flex items-center gap-3">
-                <img 
+                <Link to={`/GetUserProfile/${user._id}`}>
+                 <img 
                   src={user.photo} 
                   alt={user.name} 
                   className="w-11 h-11 rounded-full border dark:border-gray-600 object-cover"
                   onError={(e) => e.target.src = "https://via.placeholder.com/150"} // صورة افتراضية في حال الخطأ
                 />
+                </Link>
+               
                 <div className="flex flex-col">
+                  <Link to={`/GetUserProfile/${user._id}`}>
                   <span className="font-semibold text-gray-800 dark:text-gray-200">{user.name}</span>
+                  </Link>
                   <span className="text-xs text-gray-500">{user.username}</span>
                 </div>
               </div>
@@ -312,7 +379,7 @@ const [likesList, setLikesList] = useState([]);
 
            <div className='flex '>
          <button 
-            onClick={sharePost}
+            onClick={HandleSharePostIcon}
             className='flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3a3b3c]'
           >
             <BsShareFill size={24} />
@@ -322,7 +389,88 @@ const [likesList, setLikesList] = useState([]);
             {sharesCount}
             </span>
           </div>
+        {openShareModal && (
+  <Modal 
+    dismissible 
+    show={openShareModal} 
+    onClose={() => setOpenShareModal(false)}
+    size="md" 
+  >
+                <form onSubmit={handleSubmit(mutateHandleSharePost)} className="p-6 sm:p-8 space-y-5">
+    <ModalHeader className="border-b-0 pb-0">
+      <div className='flex justify-between gap-3 items-center'>
+        <Avatar img={userImg} rounded bordered />
+          <span className="text-xl font-bold text-gray-900 dark:text-white">Share Post</span>
+      </div>
+    
+     
+    </ModalHeader>
+    
+    <ModalBody className="pt-4">
+      <div className="flex flex-col space-y-4">
+      
+        {body && (
+          <div className="px-2">
+
+                      
+                    
+                      <div>
+                        <Textarea
+                          {...register('body')}
+                          placeholder="What's on your mind?"
+                          rows={5}
+                          className="[&_textarea]:px-4 [&_textarea]:py-3.5 [&_textarea]:text-base [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-gray-300 dark:[&_textarea]:bg-[#3a3b3c] dark:[&_textarea]:border-gray-600 dark:[&_textarea]:text-white dark:[&_textarea]:placeholder-gray-400 [&_textarea]:resize-none [&_textarea]:font-normal [&_textarea]:transition-all [&_textarea]:duration-200 [&_textarea]:focus:ring-2 [&_textarea]:focus:ring-blue-500 [&_textarea]:focus:border-transparent"
+                        />
+                      </div>
+            
+                   
+
+            <p className="text-gray-700 dark:text-gray-300 text-lg font-medium leading-snug">
+              {body}
+            </p>
+          </div>
+        )}
+        
+      
+        {postImg && (
+          <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+            <img
+              className="w-full h-auto max-h-[400px] object-cover"
+              src={postImg}
+              alt="Post content"
+            />
+          </div>
+        )}
+      </div>
+    </ModalBody>
+
+    <ModalFooter className="border-t-0 flex justify-end gap-3 pt-2">
+      <Button type='button'
+        color="gray" 
+        pill 
+        onClick={() => setOpenShareModal(false)}
+      >
+        Cancel
+      </Button>
+      <Button 
+        className="bg-blue-600 hover:bg-blue-700" 
+        pill 
+        type="submit"
+        disabled={isPendingShare}
+      >
+        Share Now
+      </Button>
+    </ModalFooter>
+    </form>
+  </Modal>
+)}
+
+
+
+
+
         </div>
+        
 
 
 

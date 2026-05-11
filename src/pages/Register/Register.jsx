@@ -93,7 +93,7 @@ export default function Register() {
                 <TextInput
                   {...register('password')}
                   type={showPass ? "text" : "password"}
-                  placeholder="New password"
+                  placeholder="password"
                   className="[&_input]:py-3 [&_input]:rounded-md dark:[&_input]:bg-[#3a3b3c]"
                 />
                 <button 
@@ -176,7 +176,7 @@ export default function Register() {
                <button 
                 type="button"
                 onClick={() => navigate('/Login')}
-                className="text-[#1877f2] hover:underline text-sm font-semibold"
+                className="text-[#1877f2] hover:underline text-sm font-semibold cursor-pointer"
                >
                  Already have an account?
                </button>

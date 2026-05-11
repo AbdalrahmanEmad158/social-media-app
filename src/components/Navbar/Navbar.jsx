@@ -1,5 +1,6 @@
 import {
-  Link } from "react-router-dom";
+  Link, 
+  useParams} from "react-router-dom";
 import {
   Avatar,
   Dropdown,
@@ -16,11 +17,14 @@ import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from "../themeToggele/themeToggle";
+import { IoIosNotifications } from "react-icons/io";
 
 
 
 export default  function AppNavbar() {
-  const {token,setToken,UserData,newPhoto} = useContext(AuthContext)
+   const params = useParams()
+
+  const {token,setToken,UserData,newPhoto,NotificationNumber} = useContext(AuthContext)
   const {name , email } = UserData /* user data become from Api   
   in first it is undifiend and we can not destruct this const {name , email } from it */
     || {}  // return first true . , const{} =  truthy value
@@ -106,24 +110,52 @@ export default  function AppNavbar() {
             <NavbarLink 
               as={Link} 
               to="/" 
-              active
-              className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
+               active
+              className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium 
+              transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
             >
-              Posts
+            Community  Posts
             </NavbarLink>
             <NavbarLink 
               as={Link} 
+               active
               to="/profile"
               className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
             >
               Profile
             </NavbarLink>
+
+
+             <NavbarLink 
+              as={Link} 
+               active
+              to="/Feed Following Posts"
+              className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
+            >
+              Feed Posts
+            </NavbarLink>
+
+
+
+
+                 <NavbarLink 
+              as={Link} 
+               active
+              to="/Notification"
+              className="relative text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
+            >
+              <IoIosNotifications className="" size={24} >  </IoIosNotifications>
+              <span className="absolute -top-1.5 -right-1.5">{NotificationNumber}</span>
+            </NavbarLink>
+
+
           </>
         ) : (
           <>
             <NavbarLink 
               as={Link} 
               to="/Register"
+               active
               className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
             >
               Register
@@ -131,6 +163,7 @@ export default  function AppNavbar() {
             <NavbarLink 
               as={Link} 
               to="/login"
+               active
               className="text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
             >
               Login

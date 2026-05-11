@@ -102,7 +102,7 @@ export default function ProfileDetails({UserData,profilePostslength}) {
             <div className="flex gap-4">
               <StatCard title="Followers" value={followersCount} />
               <StatCard title="Following" value={followingCount} />
-              <StatCard title="Bookmarks" value= {bookmarksCount} />
+             
             </div>
           </div>
 
@@ -126,7 +126,7 @@ export default function ProfileDetails({UserData,profilePostslength}) {
           
             <div className="flex flex-col gap-4">
               <SmallCard title="My Posts" value={profilePostslength} />
-              <SmallCard title="Saved Posts" value="0" />
+              <SmallCard title="Saved Posts" value={bookmarksCount} />
             </div>
 
           </div>

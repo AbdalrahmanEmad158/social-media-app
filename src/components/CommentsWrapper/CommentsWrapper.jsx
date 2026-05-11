@@ -54,7 +54,7 @@ async function getPostComments(){
                    {isError && <p className="text-red-500">Error loading comment</p>}
                    {isFetched && data?.data?.comments?.map((comment)=> <Comment comment={comment} setCommentToBeUbdated={setCommentToBeUbdated} activePostId={activePostId}/>)}
 
-                  <AddComment activePostId={activePostId} commentToBeUbdated={commentToBeUbdated}></AddComment>
+                  <AddComment activePostId={activePostId} commentToBeUbdated={commentToBeUbdated} setCommentToBeUbdated={setCommentToBeUbdated}></AddComment>
         </DrawerItems>
       </Drawer>
     </>

@@ -13,6 +13,8 @@ export default function Login() {
   const [msg, setMsg] = useState()
   const [loadingBtn, setLoadingBtn] = useState(false)
   const { setToken , setcurrentPassword } = useContext(AuthContext)
+  const [showPass, setShowPass] = useState(false)
+  
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     mode: 'onsubmit',
@@ -76,15 +78,22 @@ export default function Login() {
             </div>
 
          
-            <div>
-              <TextInput
-                {...register('password')}
-                type="password"
-                placeholder="Password"
-                className="[&_input]:py-3.5 [&_input]:text-lg [&_input]:rounded-md dark:[&_input]:bg-[#3a3b3c] dark:[&_input]:border-gray-600 dark:[&_input]:text-white focus:ring-1 focus:ring-blue-500"
-              />
-              {errors.password && <p className="text-red-500 text-xs mt-1 ml-1">{errors.password.message}</p>}
-            </div>
+          <div className="relative">
+                         <TextInput
+                           {...register('password')}
+                           type={showPass ? "text" : "password"}
+                           placeholder="password"
+                           className="[&_input]:py-3 [&_input]:rounded-md dark:[&_input]:bg-[#3a3b3c]"
+                         />
+                         <button 
+                           type="button" 
+                           onClick={() => setShowPass(!showPass)}
+                           className="absolute right-2 top-3 text-[11px] text-blue-600 font-semibold uppercase"
+                         >
+                           {showPass ? "Hide" : "Show"}
+                         </button>
+                         {errors.password && <p className="text-red-500 text-xs mt-1 px-1">{errors.password.message}</p>}
+                       </div>
 
           
             <Button

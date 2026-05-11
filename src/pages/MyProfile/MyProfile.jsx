@@ -18,7 +18,7 @@ export default function Profile() {
     useEffect(()=>
     {console.log(UserData, " UserData frommmm profile")},[UserData])
 
- const {data ,isLoading, isFetched,isFetching,isError} = usePosts(['userPosts'],Boolean(UserData?._id),`posts/feed?only=following&limit=10` )
+ const {data ,isLoading, isFetched,isFetching,isError} = usePosts(['userPosts'],Boolean(UserData?._id),`users/${UserData?._id}/posts` )
    console.log(data, " data frommmm profile")
   useEffect(() => {
   if (data?.data?.posts) {
@@ -41,14 +41,17 @@ export default function Profile() {
 
   return (
    <>
-    <div className='container mx-auto'>
+    <div className='container mx-auto md:w-1/2'>
       <title>profile</title>
       <ProfileDetails UserData={UserData} profilePostslength={profilePostslength}></ProfileDetails>
-      <AddPost PostToBeUbdated={PostToBeUbdated}></AddPost>
+      <AddPost PostToBeUbdated={PostToBeUbdated} 
+      setPostToBeUbdated={setPostToBeUbdated}></AddPost>
        {!data &&   /*(isLoading || Boolean(UserData?._id ==false)*/ 
         
         <PostCardSkeleton></PostCardSkeleton>}
-     {isFetched && data?.data?.posts?.map((post)=> <PostCard key={post.id} post={post} setIsOpen={setIsOpen} setActivePostId={setActivePostId}  setPostToBeUbdated={setPostToBeUbdated}/>)}
+     {isFetched && data?.data?.posts?.map((post)=> <PostCard key={post.id} post={post} 
+     setIsOpen={setIsOpen} setActivePostId={setActivePostId} 
+      setPostToBeUbdated={setPostToBeUbdated}/>)}
     </div>
      <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId}></CommentsWrapper>
   </>

@@ -5,7 +5,10 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast';
 
-export default function AddComment({activePostId,commentToBeUbdated}) {
+export default function AddComment({activePostId,commentToBeUbdated,setCommentToBeUbdated,
+   parentCommentId,
+      isReply
+}) {
     const[loadingUbdating,setloadingUbdating] = useState(false)
      const {handleSubmit,register , reset,setValue,getValues} = useForm(
             {
@@ -29,6 +32,20 @@ export default function AddComment({activePostId,commentToBeUbdated}) {
 
                 const formData = new FormData()
     formData.append('content',values.content)
+    if (parentCommentId) {
+      console.log(parentCommentId , "parentCommentId from add comment component")
+   try {
+                    const {data} = await axios.post(`https://route-posts.routemisr.com/posts/${activePostId}/comments/${parentCommentId}/replies`,formData,{headers})
+                 console.log(data , "from add Comment")
+             
+                 return data
+             } catch (error) {
+                console.log(error , "error from add Comment")
+           
+                 throw error 
+             }
+}
+else{
              try {
                     const {data} = await axios.post(`https://route-posts.routemisr.com/posts/${activePostId}/comments`,formData,{headers})
                  console.log(data , "from add Comment")
@@ -36,11 +53,12 @@ export default function AddComment({activePostId,commentToBeUbdated}) {
                  return data
              } catch (error) {
                 console.log(error , "error from add Comment")
-                toast.error('Error adding comment')
+                
                  throw error 
              }
              
         }
+      }
 
 
           const QueryClient = useQueryClient()
@@ -56,7 +74,7 @@ export default function AddComment({activePostId,commentToBeUbdated}) {
                       
                      },
                      onError : ()=>{
-                      toast.error('Error adding comment')
+                       toast.error(isReply ? 'Error adding reply' : 'Error adding comment')
                      }
                }
         
@@ -80,16 +98,21 @@ export default function AddComment({activePostId,commentToBeUbdated}) {
                    formData.append('content',getValues().content)
                     const {data} = await axios.put(`https://route-posts.routemisr.com/posts/${activePostId}/comments/${commentToBeUbdated._id}`,formData,{headers})
                  console.log(data , "from updateeee Comment")
-                setloadingUbdating(false)
+            
                       QueryClient.invalidateQueries(["comments",activePostId]) 
                       reset()
                        toast.success('Comment Updated Successfully')
              } 
              catch (error) {
                 console.log(error , "error from updateee Comment")
-                setloadingUbdating(false)
+                
                 toast.error('Error updating comment')
                  throw error 
+             }
+
+             finally{
+              setloadingUbdating(false)
+              setCommentToBeUbdated(false)
              }
         }
 
@@ -111,7 +134,7 @@ export default function AddComment({activePostId,commentToBeUbdated}) {
 
         
           <div className="flex gap-3 justify-end">
-            <Button
+          {!commentToBeUbdated &&   <Button
               type="submit"
               disabled={isPending}
               className="bg-[#1877f2] hover:bg-[#166fe5] dark:bg-[#1877f2] dark:hover:bg-[#166fe5] border-none text-white font-semibold text-sm py-2.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
@@ -124,7 +147,7 @@ export default function AddComment({activePostId,commentToBeUbdated}) {
               ) : (
                 'Add Comment'
               )}
-            </Button>
+            </Button>}
 
             {commentToBeUbdated && (
               <Button

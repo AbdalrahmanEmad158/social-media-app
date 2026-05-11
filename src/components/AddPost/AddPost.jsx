@@ -1,3 +1,4 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { Button, Spinner, Textarea } from 'flowbite-react'
@@ -7,7 +8,7 @@ import toast from 'react-hot-toast'
 import { FaImage } from 'react-icons/fa'
 
 
-export default function AddPost({PostToBeUbdated}) {
+export default function AddPost({PostToBeUbdated,setPostToBeUbdated}) {
   const[loadingUpdatingPost,setloadingUpdatingPost] = useState()
   const [imagePreview, setImagePreview] = useState(null)
   const token = localStorage.getItem('token'); 
@@ -24,18 +25,25 @@ export default function AddPost({PostToBeUbdated}) {
         }
     )
 
+    function HandleRemoveImg()
+    {
+      setImagePreview(null)
+      setValue("image",null)
+    }
+
       const QueryClient = useQueryClient()
        const {mutate,isPending} =  useMutation(
        {
              mutationFn : addPost,
              onSuccess : ()=>{
      
-              QueryClient.invalidateQueries(["allPosts","userPosts"]) 
-            //  QueryClient.invalidateQueries(["userPosts"]) 
+              QueryClient.invalidateQueries(["allPosts"]) 
+              QueryClient.invalidateQueries(["userPosts"]) 
+              QueryClient.invalidateQueries(["FeedFollowingPosts"]) 
               toast.success('Post Added Successfully')
              },
              onError : ()=>{
-    
+    toast.error('Failed to Add Post')
         
              }
        }
@@ -47,6 +55,8 @@ async function addPost(value)
 
     console.log(value)
     const formData = new FormData()
+    
+    
     formData.append('body',value.body)
      if (value.image && value.image.length > 0) {
         formData.append('image',value.image[0])
@@ -59,7 +69,9 @@ async function addPost(value)
     reset()
     setImagePreview(null)
     return response
-   } catch (error) {
+   } 
+   
+   catch (error) {
     console.log(error)
     
    }
@@ -89,9 +101,9 @@ async function addPost(value)
 
                                     const {data} = await axios.put(`https://route-posts.routemisr.com/posts/${PostToBeUbdated.id}`,formData,{headers})
                                  console.log(data , "from updateeee Post")
-                                setloadingUpdatingPost(false)
+                              
                                       QueryClient.invalidateQueries(["userPosts"]) 
-                                      QueryClient.invalidateQueries(["allPosts"]) 
+                                      QueryClient.invalidateQueries(["allPosts,FeedFollowingPosts"]) 
                                       reset()
                                        toast.success('Post Ubdated Successfully')
                                        reset()
@@ -99,6 +111,11 @@ async function addPost(value)
                              catch (error) {
                                 console.log(error , "error from updateee Post")
                                  throw error 
+                             }
+
+                             finally{
+                              setloadingUpdatingPost(false)
+                              setPostToBeUbdated(false)
                              }
             }
 
@@ -128,7 +145,7 @@ async function addPost(value)
               />
               <button
                 type="button"
-                onClick={() => setImagePreview(null)}
+                onClick={HandleRemoveImg}
                 className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-2 transition-colors duration-200 shadow-lg"
                 title="Remove image"
               >
@@ -165,7 +182,7 @@ async function addPost(value)
 
         
           <div className="flex gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-            <Button
+           {!PostToBeUbdated &&  <Button
               type="submit"
               disabled={isPending}
               className="flex-1 bg-[#1877f2] hover:bg-[#166fe5] dark:bg-[#1877f2] dark:hover:bg-[#166fe5] border-none text-white font-semibold text-base py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -178,7 +195,7 @@ async function addPost(value)
               ) : (
                 'Add Post'
               )}
-            </Button>
+            </Button>}
 
             {PostToBeUbdated && (
               <Button
