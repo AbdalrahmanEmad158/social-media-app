@@ -17,7 +17,7 @@ export default function PostDetails() {
   return (
     <>
     <title>{data?.data?.post?.body}</title>
-       <div className="container mx-auto">
+       <div className="ontainer mx-auto md:w-1/2 w-full p-4">
            {isLoading && <PostCardSkeleton></PostCardSkeleton>}
            {isFetched && <PostCard post={data?.data?.post} setIsOpen={setIsOpen} setActivePostId={setActivePostId}/>}
       </div>

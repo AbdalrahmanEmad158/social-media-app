@@ -13,11 +13,13 @@ import {
   NavbarLink,
   NavbarToggle,
 } from "flowbite-react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from "../themeToggele/themeToggle";
 import { IoIosNotifications } from "react-icons/io";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 
 
@@ -38,6 +40,38 @@ export default  function AppNavbar() {
         navigate('/Login'); 
       }, 500);
   }
+
+
+ 
+const {data:datanoti,isLoading,isError,isFetching}= useQuery({
+    queryFn: getUnReadNotificationCount,
+    queryKey: ["unReadNotificationCount"],
+    staleTime:  60 * 1000*5
+  })
+  console.log(datanoti,"data from unReadNotificationCount")
+ const NotificationCount = datanoti?.data?.unreadCount || 0;
+ console.log(NotificationCount,"NotificationCount")
+ 
+
+  async function getUnReadNotificationCount() {
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
+    try {
+      const { data } = await axios.get(
+        'https://route-posts.routemisr.com/notifications/unread-count', 
+        { headers } 
+      );
+      
+      return data;
+    } 
+    catch (error) {
+      console.error('Error fetching unread notification count:', error);
+      throw error; 
+    }
+  }
+ 
 
    function GoToSeetings()
   {
@@ -145,7 +179,7 @@ export default  function AppNavbar() {
               className="relative text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
             >
               <IoIosNotifications className="" size={24} >  </IoIosNotifications>
-              <span className="absolute -top-1.5 -right-1.5">{NotificationNumber}</span>
+              <span className="absolute -top-1.5 -right-1.5 text-red-700">{NotificationCount}</span>
             </NavbarLink>
 
 
