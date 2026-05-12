@@ -19,7 +19,7 @@ export default function Comment({comment,setCommentToBeUbdated,activePostId}) {
 
     const {UserData} = useContext(AuthContext)
 
-    const{content,createdAt,_id:CommentId,commentCreator,likes,parentComment} = comment||{}
+    const{content,createdAt,_id:CommentId,commentCreator,likes,parentComment,repliesCount} = comment||{}
     const [likelength,setlikelength] = useState(likes.length)
     useEffect(()=>{
       setlikelength(likes.length)
@@ -140,16 +140,15 @@ const replies = repliesData?.data?.replies || [];
                </div>
 
 
-               <div className='flex gap-0.5'>
+               <div className='flex gap-0.5 items-center'>
                  <button className='flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 
                  dark:hover:text-blue-400 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100
                   dark:hover:bg-[#3a3b3c]' onClick={()=>setShowReplyInput(!showReplyInput)}>
                   
-                  <span className='text-sm font-medium hidden sm:inline'>replay</span> 
+                  <span className='text-sm font-medium  '>replay</span> 
       
                 </button>
-                <button >
-                  frkljfrjkn</button>
+               <span className='text-sm font-medium'>{repliesCount}</span>
                </div>
         </div>
        {commentCreatorId === UserData?._id && (
