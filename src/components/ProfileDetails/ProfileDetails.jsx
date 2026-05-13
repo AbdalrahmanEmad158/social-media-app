@@ -56,7 +56,7 @@ export default function ProfileDetails({UserData,profilePostslength}) {
             <img
               src={newPhoto||photo}
               alt="profile"
-              className="w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 shadow-md object-cover"
+              className="w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 shadow-md object-contain"
            />
                <label
         htmlFor="profilePhoteChange"

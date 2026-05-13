@@ -39,7 +39,7 @@ console.log("POSTS LENGTH:", data?.data?.posts?.length);
     <title>posts</title>
     {isError?<div className='text-center text-red-500'>Error fetching data</div> : <>
       <div className="container mx-auto md:w-1/2">
-        <AddPost PostToBeUbdated={PostToBeUbdated}></AddPost>
+        <AddPost PostToBeUbdated={PostToBeUbdated} setPostToBeUbdated={setPostToBeUbdated}></AddPost>
            {isLoading && <PostCardSkeleton></PostCardSkeleton>}
            {isError && <p className="text-red-500">Error loading posts</p>}
            {isFetched && data?.data?.posts?.map((post)=> <PostCard key={post.id} post={post} setIsOpen={setIsOpen} 

@@ -50,7 +50,7 @@ export default function FeedFollowingPosts() {
 
   {/* posts */}
   <div className="w-full md:w-2/3 order-2 md:order-1">
-    <AddPost PostToBeUbdated={PostToBeUbdated} />
+    <AddPost PostToBeUbdated={PostToBeUbdated} setPostToBeUbdated={setPostToBeUbdated} />
 
     {isLoading && <PostCardSkeleton />}
     {isError && <p className="text-red-500">Error loading posts</p>}

@@ -105,8 +105,11 @@ async function addPost(value)
                                       QueryClient.invalidateQueries(["userPosts"]) 
                                       QueryClient.invalidateQueries(["allPosts,FeedFollowingPosts"]) 
                                       reset()
+                                     
                                        toast.success('Post Ubdated Successfully')
                                        reset()
+                                        setImagePreview(null)
+                                        setPostToBeUbdated(false)
                              } 
                              catch (error) {
                                 console.log(error , "error from updateee Post")
