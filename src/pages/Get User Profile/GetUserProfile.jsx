@@ -52,13 +52,18 @@ export default function GetUserProfile() {
            const handleClose = () => setIsOpen(false);
     
              
-    
+    const { UserData:MyData } = useContext(AuthContext)
+    const isMyProfile = MyData?._id == id
+    console.log(MyData?._id, "MyData?._id from GetUserProfile")
+    console.log(id, "id from GetUserProfile")
+    console.log(isMyProfile, "isMyProfile from GetUserProfile")
            
   return <>
-  <>
-      <div className='container mx-auto md:w-1/2'>
-        <title>profile</title>
-        <ProfileUserDetails UserData={UserData} profilePostslength={profilePostslength}></ProfileUserDetails>
+    <title>profile</title>
+  {isError2 ? <div className='text-center text-red-500'>Error fetching user data</div> : <>
+    <div className='container mx-auto md:w-1/2'>
+      
+        <ProfileUserDetails UserData={UserData} profilePostslength={profilePostslength}  isMyProfile={ isMyProfile}></ProfileUserDetails>
         
          {!data &&   /*(isLoading || Boolean(UserData?._id ==false)*/ 
           
@@ -68,6 +73,11 @@ export default function GetUserProfile() {
         />)}
       </div>
        <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId}></CommentsWrapper>
-    </>
+   
+  
   </>
+}
+
+    </>
+
 }

@@ -5,7 +5,7 @@ import React, { use, useContext, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { HiUserAdd, HiUserRemove } from "react-icons/hi";
 
-export default function ProfileUserDetails({UserData,profilePostslength}) {
+export default function ProfileUserDetails({UserData,profilePostslength, isMyProfile}) {
     console.log(UserData, "UserData from ProfileUserDetails")
     const{_id,cover,email,name,photo,followersCount,followingCount,bookmarksCount}=UserData || {}
 
@@ -137,7 +137,7 @@ function SmallCard({ title, value }) {
 
           </div>
          
-    <div className="mt-8">
+  {!isMyProfile &&  <div className="mt-8">
        <Button
   onClick={HandleFollwing}
   className={`
@@ -162,7 +162,10 @@ function SmallCard({ title, value }) {
     )}
   </div>
 </Button>
-    </div>
+    </div>}
+
+
+    
         </div>
       </div>
     </div>

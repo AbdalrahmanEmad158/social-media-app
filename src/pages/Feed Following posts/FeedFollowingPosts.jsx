@@ -40,6 +40,7 @@ export default function FeedFollowingPosts() {
    return (
      <>
      <title>postsFollwing</title>
+{isError ? <div className='text-center text-red-500'>Error fetching data</div> : <>
   <div className="container mx-auto flex flex-col md:flex-row gap-6">
 
   {/* suggestions */}
@@ -71,6 +72,9 @@ export default function FeedFollowingPosts() {
 </div>
         <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId}></CommentsWrapper>
         
+</>}
+
+
   
      </>
    )

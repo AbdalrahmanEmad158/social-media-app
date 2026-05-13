@@ -43,8 +43,12 @@ export default function Profile() {
 
   return (
    <>
-    <div className='container mx-auto md:w-1/2'>
-      <title>profile</title>
+    <title>profile</title>
+     {isError ? <div className='text-center text-red-500'>Error fetching data</div> :
+      <>
+       <div className='container mx-auto md:w-1/2'>
+     
+     
       <ProfileDetails UserData={UserData} profilePostslength={profilePostslength}></ProfileDetails>
       <AddPost PostToBeUbdated={PostToBeUbdated} 
       setPostToBeUbdated={setPostToBeUbdated}></AddPost>
@@ -56,6 +60,9 @@ export default function Profile() {
       setPostToBeUbdated={setPostToBeUbdated}/>)}
     </div>
      <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId} postownerId={postownerId}></CommentsWrapper>
+  
+      </>}
+   
   </>
   )
 } 

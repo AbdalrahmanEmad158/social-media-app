@@ -37,6 +37,7 @@ console.log("POSTS LENGTH:", data?.data?.posts?.length);
   return (
     <>
     <title>posts</title>
+    {isError?<div className='text-center text-red-500'>Error fetching data</div> : <>
       <div className="container mx-auto md:w-1/2">
         <AddPost PostToBeUbdated={PostToBeUbdated}></AddPost>
            {isLoading && <PostCardSkeleton></PostCardSkeleton>}
@@ -47,6 +48,8 @@ console.log("POSTS LENGTH:", data?.data?.posts?.length);
       </div>
        <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId}></CommentsWrapper>
        
+    </>}
+    
  
     </>
   )

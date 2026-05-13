@@ -16,13 +16,17 @@ export default function PostDetails() {
          const handleClose = () => setIsOpen(false);
   return (
     <>
-    <title>{data?.data?.post?.body}</title>
-       <div className="ontainer mx-auto md:w-1/2 w-full p-4">
+      <title>{data?.data?.post?.body}</title>
+    {isError ? <div className='text-center text-red-500'>Error fetching data</div> :<>
+        <div className="ontainer mx-auto md:w-1/2 w-full p-4">
            {isLoading && <PostCardSkeleton></PostCardSkeleton>}
            {isFetched && <PostCard post={data?.data?.post} setIsOpen={setIsOpen} setActivePostId={setActivePostId}/>}
       </div>
        <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId}></CommentsWrapper>
       
+    </>}
+  
+   
     </>
   )
 }
