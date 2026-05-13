@@ -66,8 +66,9 @@ export default function NotificationCard({ notification, onMarkOne }) {
   const linkItem =
     entityType === "post" ? `/details/${entityId}` : entityType === "user" ? `/GetUserProfile/${entityId}` : `/details/${notification.entity.post}`;
   return <>
+  <Link to={linkItem}>
    <div
-   onClick={() => navigate(linkItem)}
+
       className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition 
       ${
         !notification.isRead
@@ -96,9 +97,10 @@ export default function NotificationCard({ notification, onMarkOne }) {
         {/* Text */}
         <div>
           <p className="font-semibold text-gray-900 dark:text-gray-100">
-            <Link to={`/GetUserProfile/${actorId}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
-            {notification.actor?.name}
-            
+            <Link to={`/GetUserProfile/${actorId}`}>
+              <div onClick={(e)=>e.stopPropagation} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                {notification.actor?.name}
+              </div>
             </Link>{" "}
             <span className="font-normal text-gray-600 dark:text-gray-400">
               {notification.entityType === "comment" &&
@@ -141,5 +143,6 @@ export default function NotificationCard({ notification, onMarkOne }) {
         {time}
       </span>
     </div>
+    </Link>
     </>
 }
