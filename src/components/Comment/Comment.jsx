@@ -130,11 +130,11 @@ const replies = repliesData?.data?.replies || [];
         </div>
 {img && (
   <div className="px-5 pb-4">
-    <div className="relative overflow-hidden rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
+    <div className="relative  rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
       <img 
         src={img} 
         alt="comment attachment"
-        className="w-full max-h-[450px] object-cover cursor-pointer hover:opacity-95 transition-opacity duration-200"
+        className="w-full max-h-[450px] object-contain cursor-pointer hover:opacity-95 transition-opacity duration-200"
       
       />
     </div>

@@ -18,6 +18,7 @@ export default function ReplyComment({ reply, activePostId, parentCommentId, set
   const { content, createdAt, _id: replyId, commentCreator, likes } = reply;
    const [likelength,setlikelength] = useState(likes.length)
   const isUserLiked = likes?.some(id => id === UserData?._id);
+  const img = reply?.image
   console.log(likelength , "likelength from reply comment component")
 
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
@@ -75,6 +76,19 @@ export default function ReplyComment({ reply, activePostId, parentCommentId, set
       <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-[#3a3b3c] p-2 rounded-lg">
         {content}
       </p>
+
+     {img && (
+  <div className="px-5 pb-4">
+    <div className="relative  rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
+      <img 
+        src={img} 
+        alt="comment attachment"
+        className="w-full max-h-[450px] object-contain cursor-pointer hover:opacity-95 transition-opacity duration-200"
+      
+      />
+    </div>
+  </div>
+)}
 
       <div className="flex gap-4 mt-1 text-xs items-center">
         <div className='flex gap-1 items-center'>
