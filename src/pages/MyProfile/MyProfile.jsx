@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../components/Context/AuthContext'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { headerDataObj } from '../../components/helpers/headersObj'
+
 import usePosts from '../../CustomHooks/usePosts'
 import PostCard from '../../components/PostCard/PostCard'
 import PostCardSkeleton from '../../components/PostCard/postCardSkeleton/PostCardSkeketon'
