@@ -55,9 +55,11 @@ async function addPost(value)
 
     console.log(value)
     const formData = new FormData()
+    if (value.body) {
+       formData.append('body',value.body)
+    }
     
-    
-    formData.append('body',value.body)
+   
      if (value.image && value.image.length > 0) {
         formData.append('image',value.image[0])
         console.log(value.image[0],"img frpm add post")
@@ -80,7 +82,9 @@ async function addPost(value)
    useEffect(()=>
             {  if (PostToBeUbdated) {
                 console.log(PostToBeUbdated.body)
-                setValue("body", PostToBeUbdated.body)
+                if(PostToBeUbdated.body)
+                setValue("body",PostToBeUbdated.body)
+              
                    setImagePreview(PostToBeUbdated.image)
                  console.log(PostToBeUbdated.image,"img from useEffect update 1")
             }
