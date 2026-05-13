@@ -10,9 +10,10 @@ import { RiDislikeLine } from "react-icons/ri";
 import { FcLike } from "react-icons/fc";
 import AddComment from '../AddComment/AddComment'
 import useCommentReplies from '../../CustomHooks/useCommentReplies'
+import ReplyComment from './ReplayComment'
 
 
-export default function Comment({comment,setCommentToBeUbdated,activePostId}) {
+export default function Comment({comment,setCommentToBeUbdated,activePostId,postownerId}) {
 
    const [showReplyInput, setShowReplyInput] = useState(false);
    console.log(showReplyInput , "showReplyInput from comment component")
@@ -20,13 +21,16 @@ export default function Comment({comment,setCommentToBeUbdated,activePostId}) {
     const {UserData} = useContext(AuthContext)
 
     const{content,createdAt,_id:CommentId,commentCreator,likes,parentComment,repliesCount} = comment||{}
-    const [likelength,setlikelength] = useState(likes.length)
+    const img = comment.image
+    const [likelength,setlikelength] = useState(likes?.length)
     useEffect(()=>{
       setlikelength(likes.length)
     },[likes.length])
     const {name, _id : commentCreatorId , photo} = commentCreator
  const QueryClient = useQueryClient()
  const[loadingdelete,setloadingdelete] = useState(false)
+
+ const isPostOwner = UserData?._id === postownerId;
 
  const result = formatDistanceToNow(
       new Date(createdAt),
@@ -124,6 +128,22 @@ const replies = repliesData?.data?.replies || [];
         <div className="px-5 py-4">
           <p className='text-gray-800 dark:text-gray-100 text-base leading-relaxed font-normal'>{content}</p>
         </div>
+{img && (
+  <div className="px-5 pb-4">
+    <div className="relative overflow-hidden rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
+      <img 
+        src={img} 
+        alt="comment attachment"
+        className="w-full max-h-[450px] object-cover cursor-pointer hover:opacity-95 transition-opacity duration-200"
+      
+      />
+    </div>
+  </div>
+)}
+
+        <div>
+
+        </div>
 
      <div className='flex justify-between items-center px-5 py-4 border-t border-gray-100 dark:border-gray-700'>
         <div className='flex gap-2'>
@@ -151,78 +171,78 @@ const replies = repliesData?.data?.replies || [];
                <span className='text-sm font-medium'>{repliesCount}</span>
                </div>
         </div>
-       {commentCreatorId === UserData?._id && (
-          <div className=' flex gap-3 justify-end'>
-            <Button 
-              onClick={() => setCommentToBeUbdated(comment)}
-              className='bg-[#1877f2] hover:bg-[#166fe5] dark:bg-[#1877f2] dark:hover:bg-[#166fe5] border-none text-white font-semibold text-sm py-2.5 px-5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg'
-            >
-              Update
-            </Button>
+    {commentCreatorId === UserData?._id ? (
+  <div className='flex gap-3 justify-end'>
+    <Button 
+      onClick={() => setCommentToBeUbdated(comment)}
+      className='bg-[#1877f2] hover:bg-[#166fe5] dark:bg-[#1877f2] dark:hover:bg-[#166fe5] border-none text-white font-semibold text-sm py-2.5 px-5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg'
+    >
+      Update
+    </Button>
 
-            <Button 
-              disabled={loadingdelete} 
-              onClick={deleteComment}
-              className="bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 border-none text-white font-semibold text-sm py-2.5 px-5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              {loadingdelete ? (
-                <>
-                  <Spinner size="sm" />
-                  <span>Deleting...</span>
-                </>
-              ) : (
-                'Delete'
-              )}
-            </Button>
-          </div>
+    <Button 
+      disabled={loadingdelete} 
+      onClick={deleteComment}
+      className="bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 border-none text-white font-semibold text-sm py-2.5 px-5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+    >
+      {loadingdelete ? (
+        <>
+          <Spinner size="sm" />
+          <span>Deleting...</span>
+        </>
+      ) : (
+        'Delete'
+      )}
+    </Button>
+  </div>
+) : (
+  isPostOwner && (
+    <div className='flex justify-end'>
+      <Button 
+        disabled={loadingdelete} 
+        onClick={deleteComment}
+        className="bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 border-none text-white font-semibold text-sm py-2.5 px-5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+      >
+        {loadingdelete ? (
+          <>
+            <Spinner size="sm" />
+            <span>Deleting...</span>
+          </>
+        ) : (
+          'Delete'
         )}
+      </Button>
+    </div>
+  )
+)}
         
      </div>
      
 {showReplyInput && (
-  <>
-    {repliesLoading && (
-      <p className="ml-12 text-sm text-gray-500">
-        Loading replies...
-      </p>
+  <div className="mt-4 space-y-2">
+    {repliesLoading ? (
+      <p className="ml-12 text-xs">Loading replies...</p>
+    ) : (
+      replies.map((reply) => (
+        <ReplyComment
+          key={reply._id} 
+          reply={reply} 
+          activePostId={activePostId} 
+          parentCommentId={CommentId}
+          setCommentToBeUbdated={setCommentToBeUbdated}
+          handleLikebtn={handleLikebtn}
+       isPostOwner={isPostOwner}
+        />
+      ))
     )}
-
-    {replies.map((reply) => (
-      <div key={reply._id} className="ml-12 mt-3 border-l pl-3">
-
-        {/* user info */}
-        <div className="flex items-center gap-2">
-          <img
-            src={reply.commentCreator?.photo}
-            className="w-7 h-7 rounded-full"
-            alt={reply.commentCreator?.name}
-          />
-
-          <p className="text-sm font-semibold">
-            {reply.commentCreator?.name}
-          </p>
-        </div>
-
-        {/* content */}
-        <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
-          {reply.content}
-        </p>
-
-      </div>
-    ))}
-  </>
-)}
-
-
-
-
-     {showReplyInput && (
-  <div className="ml-12 mt-2">
-    <AddComment
-      activePostId={activePostId}
-      parentCommentId={CommentId}
-      isReply={true}
-    />
+    
+    <div className="ml-8 mt-2">
+      <AddComment
+        activePostId={activePostId}
+        parentCommentId={CommentId}
+        isReply={true}
+      />
+    </div>
   </div>
 )}
        

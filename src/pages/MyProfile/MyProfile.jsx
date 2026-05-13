@@ -20,6 +20,7 @@ export default function Profile() {
 
  const {data ,isLoading, isFetched,isFetching,isError} = usePosts(['userPosts'],Boolean(UserData?._id),`users/${UserData?._id}/posts` )
    console.log(data, " data frommmm profile")
+
   useEffect(() => {
   if (data?.data?.posts) {
     setprofilePostslength(data.data.posts.length);
@@ -29,6 +30,7 @@ export default function Profile() {
 
       const [isOpen, setIsOpen] = useState(false);
     const [activePostId, setActivePostId] = useState(false);
+    const postownerId = data?.data?.posts[0]?.user?._id;
      
 
       
@@ -53,7 +55,7 @@ export default function Profile() {
      setIsOpen={setIsOpen} setActivePostId={setActivePostId} 
       setPostToBeUbdated={setPostToBeUbdated}/>)}
     </div>
-     <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId}></CommentsWrapper>
+     <CommentsWrapper isOpen={isOpen} setIsOpen={setIsOpen}  handleClose={handleClose} activePostId={activePostId} postownerId={postownerId}></CommentsWrapper>
   </>
   )
 } 

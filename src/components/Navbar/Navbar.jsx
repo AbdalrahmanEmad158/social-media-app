@@ -179,7 +179,7 @@ const {data:datanoti,isLoading,isError,isFetching}= useQuery({
               className="relative text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200 border-b-2 border-transparent hover:border-blue-600 dark:hover:border-blue-400 pb-1"
             >
               <IoIosNotifications className="" size={24} >  </IoIosNotifications>
-              <span className="absolute -top-1.5 -right-1.5 text-red-700">{NotificationCount}</span>
+              <span className="absolute -top-1.5 -right-1.5 text-red-700">{NotificationNumber}</span>
             </NavbarLink>
 
 

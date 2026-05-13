@@ -10,7 +10,7 @@ import AddComment from '../AddComment/AddComment';
 
 
     
-export default function CommentsWrapper({isOpen, setIsOpen,  handleClose,activePostId}) {
+export default function CommentsWrapper({isOpen, setIsOpen,  handleClose,activePostId,postownerId}) {
   const [commentToBeUbdated,setCommentToBeUbdated]= useState()
 
 
@@ -18,7 +18,7 @@ export default function CommentsWrapper({isOpen, setIsOpen,  handleClose,activeP
    const token = localStorage.getItem('token'); 
     
     const headers = {
-        Authorization: `Bearer ${token}`// تأكد من اسم المفتاح المطلبو من الـ API (غالباً token أو Authorization)
+        Authorization: `Bearer ${token}`
     };
 
 const {data ,isLoading, isFetched,isFetching,isError} = useQuery({
@@ -50,10 +50,12 @@ async function getPostComments(){
       <Drawer className='h-[60vh]' open={isOpen} onClose={handleClose} position="bottom">
         <DrawerHeader title="Comments" />
         <DrawerItems className="relative">
-                   {isLoading && <Skeleton count={6} width={'100%'} height={40} baseColor='#09c'></Skeleton>}
+            <div className='h-[50vh] overflow-y-auto px-4'>
+                     {isLoading && <Skeleton count={6} width={'100%'} height={40} baseColor='#09c'></Skeleton>}
                    {isError && <p className="text-red-500">Error loading comment</p>}
-                   {isFetched && data?.data?.comments?.map((comment)=> <Comment comment={comment} setCommentToBeUbdated={setCommentToBeUbdated} activePostId={activePostId}/>)}
+                   {isFetched && data?.data?.comments?.map((comment)=> <Comment comment={comment} setCommentToBeUbdated={setCommentToBeUbdated} activePostId={activePostId} postownerId={postownerId}/>)}
 
+            </div>
                   <AddComment activePostId={activePostId} commentToBeUbdated={commentToBeUbdated} setCommentToBeUbdated={setCommentToBeUbdated}></AddComment>
         </DrawerItems>
       </Drawer>

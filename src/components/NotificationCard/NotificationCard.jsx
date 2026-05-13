@@ -5,9 +5,10 @@ import { BsShareFill } from "react-icons/bs";
 import { FcLike } from "react-icons/fc";
 import { FaCommentAlt } from "react-icons/fa";
 import { HiUserAdd, HiUserRemove } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function NotificationCard({ notification, onMarkOne }) {
+  const navigate = useNavigate()
   const time = notification.createdAt
     ? formatDistanceToNowStrict(new Date(notification.createdAt), {
         addSuffix: true,
@@ -33,7 +34,7 @@ export default function NotificationCard({ notification, onMarkOne }) {
     createdAt,
   } = notification;
 
-  const { name, photo } = actor;
+  const { name, photo ,_id:actorId} = actor;
 
 
   const config = {
@@ -64,9 +65,9 @@ export default function NotificationCard({ notification, onMarkOne }) {
   const currentConfig = config[type] || config.comment_post;
   const linkItem =
     entityType === "post" ? `/details/${entityId}` : entityType === "user" ? `/GetUserProfile/${entityId}` : `/details/${notification.entity.post}`;
-  return (
-   <Link to={linkItem}>
-    <div
+  return <>
+   <div
+   onClick={() => navigate(linkItem)}
       className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition 
       ${
         !notification.isRead
@@ -74,20 +75,31 @@ export default function NotificationCard({ notification, onMarkOne }) {
           : "bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800"
       }`}
     >
-      <div className="flex items-center gap-4 relative">
+      <div className="flex items-center gap-4 ">
         {/* Avatar */}
-        <img
+      <div className="relative">
+      <Link to={`/GetUserProfile/${actorId}`}>
+          <img
           src={notification.actor?.photo || "/avatar.png"}
           alt=""
           className="w-12 h-12 rounded-full"
         />
+        </Link>
 
-
-
+           
+    <span
+            className={`absolute -bottom-1 -right-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100 ${currentConfig.color}`}
+          >
+            {currentConfig.icon}
+          </span>
+      </div>
         {/* Text */}
         <div>
           <p className="font-semibold text-gray-900 dark:text-gray-100">
-            {notification.actor?.name}{" "}
+            <Link to={`/GetUserProfile/${actorId}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+            {notification.actor?.name}
+            
+            </Link>{" "}
             <span className="font-normal text-gray-600 dark:text-gray-400">
               {notification.entityType === "comment" &&
                 "replied to your comment"}
@@ -114,7 +126,7 @@ export default function NotificationCard({ notification, onMarkOne }) {
                 : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
             }`}
             onClick={(e) => {
-              e.stopPropagation(); // مهم
+              e.preventDefault();
               onMarkOne(notification._id);
             }}
           >
@@ -129,6 +141,5 @@ export default function NotificationCard({ notification, onMarkOne }) {
         {time}
       </span>
     </div>
-    </Link>
-  );
+    </>
 }

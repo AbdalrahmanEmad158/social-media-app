@@ -26,7 +26,7 @@ const headers = {
         queryFn: getNotifications,
         queryKey: ["notifications"],
         refetchOnWindowFocus : false,
-        staleTime:  60 * 1000
+        staleTime:  5 * 1000
     });
   }
 

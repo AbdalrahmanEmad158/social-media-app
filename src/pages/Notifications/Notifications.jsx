@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaBell, FaCheck } from "react-icons/fa";
 import NotificationCard from "../../components/NotificationCard/NotificationCard";
 import { useMarkAllNotificationAsRead, useMarkSpecificNotficationAsRead, useNotification } from "../../CustomHooks/useNotification";
+import { AuthContext } from "../../components/Context/AuthContext";
 
 export default function Notifications() {
   const [activeTab, setActiveTab] = useState("all");
@@ -15,7 +16,10 @@ export default function Notifications() {
     activeTab === "all"
       ? resOfGetNot?.data.notifications
       : resOfGetNot?.data.notifications.filter((n) => !n.isRead);
+      
 
+      const{setNotificationNumber}= useContext(AuthContext)
+      setNotificationNumber(resOfGetNot?.data.notifications.filter((n) => !n.isRead).length)
   return (
     <section className="max-w-4xl mx-auto p-4">
       {/* Header */}
@@ -45,22 +49,25 @@ export default function Notifications() {
       {/* Tabs */}
       <div className="flex gap-2 mb-6">
         <button
-          onClick={() => setActiveTab("all")}
+          onClick={() => setActiveTab("all")  
+
+          } 
           className={`px-4 py-2 rounded-xl ${
             activeTab === "all"
               ? "bg-blue-600 text-white"
-              : "bg-gray-100"
+              : "bg-gray-100 dark:bg-gray-700 dark:text-gray-300"
           }`}
         >
           All
         </button>
 
         <button
-          onClick={() => setActiveTab("unread")}
+          onClick={() => setActiveTab("unread")  
+          }
           className={`px-4 py-2 rounded-xl ${
             activeTab === "unread"
               ? "bg-blue-600 text-white"
-              : "bg-gray-100"
+              : "bg-gray-100 dark:bg-gray-700 dark:text-gray-300"
           }`}
         >
           Unread
