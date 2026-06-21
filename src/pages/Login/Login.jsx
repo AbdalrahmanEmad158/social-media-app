@@ -111,11 +111,7 @@ export default function Login() {
               </div>
             )}
 
-            <div className="text-center">
-              <Link to="/forgot-password" size="sm" className="text-[#1877f2] hover:underline text-sm">
-                Forgotten password?
-              </Link>
-            </div>
+          
 
          
             <div className="border-t border-gray-200 dark:border-gray-700 my-4"></div>
